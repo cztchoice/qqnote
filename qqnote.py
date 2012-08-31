@@ -22,7 +22,8 @@ class LinksParser(HTMLParser.HTMLParser):
             return
         for name, value in attributes:
             if name == 'class' and value == 'qqshowbd':
-                break
+                pass
+                #break
             elif name == 'class' and value == 'notetitle bigfont':
                 self.istitle = 1
                 print 'match it'
@@ -43,11 +44,13 @@ class LinksParser(HTMLParser.HTMLParser):
     def handle_endtag(self, tag):
         if tag == 'div' and self.recording:
             self.recording -= 1
-            #self.istitle = 0
-            #self.istime = 0
-            #self.iscontent = 0
+            self.istitle = 0
+            self.istime = 0
+            self.iscontent = 0
 
     def handle_data(self, data):
+        if data.strip() == '':
+            return
         if self.recording:
             self.data.append(data)
         if self.istitle:
@@ -61,8 +64,8 @@ parser = LinksParser()
 f = codecs.open('example.html', 'r', 'utf-8')
 html = f.read()
 parser.feed(html)
-for s in parser.data:
-    if s.strip() != '':
-        print s
+print ''.join(parser.title)
+print ''.join(parser.time)
+print ''.join(parser.content)
 
 parser.close()
