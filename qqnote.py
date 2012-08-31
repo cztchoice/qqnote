@@ -3,7 +3,25 @@ import codecs
 
 
 def myjoin(list):
-    return ''.join(list)
+    temp = ''.join(list)
+    return temp
+
+
+def output(title, time, content):
+    str_title = myjoin(title)
+    str_time = myjoin(time)
+    str_content = myjoin(content)
+    #print str_title
+    #print str_time
+    #print str_content
+    #print '-----------------------------'
+    str_title = str_title.replace('/', '')
+    file_name = r'temp/' + str_title
+    f = codecs.open(file_name, 'w', 'utf-8')
+    f.write(str_time)
+    f.write('\n')
+    f.write(str_content)
+    f.close()
 
 
 class LinksParser(HTMLParser.HTMLParser):
@@ -28,10 +46,7 @@ class LinksParser(HTMLParser.HTMLParser):
         for name, value in attributes:
             if name == 'class' and value == 'qqshowbd':
                 if self.newpara:
-                    print ''.join(self.title)
-                    print ''.join(self.time)
-                    print ''.join(self.content)
-                    print '---------------------------------'
+                    output(self.title, self.time, self.content)
                     self.title = []
                     self.time = []
                     self.content = []
@@ -59,23 +74,30 @@ class LinksParser(HTMLParser.HTMLParser):
             self.iscontent = 0
 
     def handle_data(self, data):
+        #test whether data is an empty string
         if data.strip() == '':
             return
+        #Keep the \r\n in the string
+        temp = data.strip(' ')
         if self.recording:
-            self.data.append(data)
-        if self.istitle:
-            self.title.append(data)
-        if self.istime:
-            self.time.append(data)
-        if self.iscontent:
-            self.content.append(data)
+            if self.istitle:
+                self.title.append(temp)
+            elif self.istime:
+                self.time.append(temp)
+            elif self.iscontent:
+                self.content.append(temp)
 
-parser = LinksParser()
-f = codecs.open('example.html', 'r', 'utf-8')
-html = f.read()
-parser.feed(html)
-#print ''.join(parser.title)
-#print ''.join(parser.time)
-#print ''.join(parser.content)
 
-parser.close()
+def parse(file_name):
+    parser = LinksParser()
+    f = codecs.open(file_name, 'r', 'utf-8')
+    html = f.read()
+    parser.feed(html)
+    #The last paragraph can't be handle inside the HTMLParser class
+    #So I handle it here
+    output(parser.title, parser.time, parser.content)
+    parser.close()
+
+
+if __name__ == '__main__':
+    parse('0.html')
