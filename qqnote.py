@@ -1,5 +1,6 @@
 import HTMLParser
 import codecs
+import sys
 
 
 def myjoin(list):
@@ -100,4 +101,5 @@ def parse(file_name):
 
 
 if __name__ == '__main__':
-    parse('0.html')
+    for i in sys.argv[1:]:
+        parse(i)
