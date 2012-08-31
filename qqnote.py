@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import HTMLParser
 import codecs
 import sys
@@ -17,7 +19,7 @@ def output(title, time, content):
     #print str_content
     #print '-----------------------------'
     str_title = str_title.replace('/', '')
-    file_name = r'temp/' + str_title
+    file_name = r'temp/' + str_title + '.txt'
     f = codecs.open(file_name, 'w', 'utf-8')
     f.write(str_time)
     f.write('\n')
@@ -91,7 +93,9 @@ class LinksParser(HTMLParser.HTMLParser):
 
 def parse(file_name):
     parser = LinksParser()
-    f = codecs.open(file_name, 'r', 'utf-8')
+    #the fileencoding QQmail export is cp936
+    #f = codecs.open(file_name, 'r', 'utf-8')
+    f = codecs.open(file_name, 'r', 'cp936')
     html = f.read()
     parser.feed(html)
     #The last paragraph can't be handle inside the HTMLParser class
