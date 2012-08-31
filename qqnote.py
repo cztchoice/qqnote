@@ -2,6 +2,10 @@ import HTMLParser
 import codecs
 
 
+def myjoin(list):
+    return ''.join(list)
+
+
 class LinksParser(HTMLParser.HTMLParser):
     def __init__(self):
         HTMLParser.HTMLParser.__init__(self)
@@ -9,6 +13,7 @@ class LinksParser(HTMLParser.HTMLParser):
         self.istitle = 0
         self.istime = 0
         self.iscontent = 0
+        self.newpara = 0
         self.data = []
         self.title = []
         self.time = []
@@ -22,19 +27,24 @@ class LinksParser(HTMLParser.HTMLParser):
             return
         for name, value in attributes:
             if name == 'class' and value == 'qqshowbd':
-                pass
+                if self.newpara:
+                    print ''.join(self.title)
+                    print ''.join(self.time)
+                    print ''.join(self.content)
+                    print '---------------------------------'
+                    self.title = []
+                    self.time = []
+                    self.content = []
+                self.newpara = 1
                 #break
             elif name == 'class' and value == 'notetitle bigfont':
                 self.istitle = 1
-                print 'match it'
                 break
             elif name == 'class' and value == 'graytext timesep':
                 self.istime = 1
-                print 'match it'
                 break
             elif name == 'id' and value == 'content':
                 self.iscontent = 1
-                print 'match it'
                 break
 
         else:
@@ -64,8 +74,8 @@ parser = LinksParser()
 f = codecs.open('example.html', 'r', 'utf-8')
 html = f.read()
 parser.feed(html)
-print ''.join(parser.title)
-print ''.join(parser.time)
-print ''.join(parser.content)
+#print ''.join(parser.title)
+#print ''.join(parser.time)
+#print ''.join(parser.content)
 
 parser.close()
