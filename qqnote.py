@@ -3,28 +3,31 @@
 import HTMLParser
 import codecs
 import sys
-
-
-def myjoin(list):
-    temp = ''.join(list)
-    return temp
+import os
 
 
 def output(title, time, content):
-    str_title = myjoin(title)
-    str_time = myjoin(time)
-    str_content = myjoin(content)
+    str_title = ''.join(title)
+    str_time = ''.join(time)
+    str_content = '\r\n'.join(content)
     #print str_title
     #print str_time
     #print str_content
     #print '-----------------------------'
-    str_title = str_title.replace('/', '')
-    file_name = r'temp/' + str_title + '.txt'
-    f = codecs.open(file_name, 'w', 'utf-8')
+    #str_title = str_title.replace('/', '')
+    #str_title = str_title.replace('?', '')
+    #str_title = str_title.replace(':', '')
+    #file_name = r'temp/' + str_title + '.txt'
+    file_name = 'temp/%d.txt' % output.val
+    output.val += 1
+    f = codecs.open(file_name, 'w', 'cp936')
+    f.write(str_title)
+    f.write(os.linesep)
     f.write(str_time)
-    f.write('\n')
+    f.write(os.linesep)
     f.write(str_content)
     f.close()
+output.val = 0
 
 
 class LinksParser(HTMLParser.HTMLParser):
