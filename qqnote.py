@@ -108,5 +108,7 @@ def parse(file_name):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        print "Usage: %s file_names_to_translate" % sys.argv[0]
     for i in sys.argv[1:]:
         parse(i)
